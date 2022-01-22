@@ -1,7 +1,7 @@
 from flask import Flask
 
 from .database import db
-from .firstmodule import models
+from .general import models
 
 
 def create_app() -> Flask:
@@ -12,7 +12,7 @@ def create_app() -> Flask:
     with app.test_request_context():
         db.create_all()
 
-    import app.firstmodule.controllers as firstmodule
+    import app.general.controllers as firstmodule
     app.register_blueprint(firstmodule.module)
 
     return app

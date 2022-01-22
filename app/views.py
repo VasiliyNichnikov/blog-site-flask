@@ -2,7 +2,7 @@ from typing import Union
 
 from flask import render_template, flash, redirect, Response
 
-from app.firstmodule.forms import LoginForm
+from app.general.forms import LoginForm
 from run import app
 
 
