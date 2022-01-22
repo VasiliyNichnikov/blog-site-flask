@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Вход в приложение</h1>
+    <a href="{{ url_for('entity.get_yandex_token') }}">Зайти с помощью Яндекс ID</a>
+{% endblock %}
