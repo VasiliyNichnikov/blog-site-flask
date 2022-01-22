@@ -26,7 +26,7 @@ def index() -> str:
             "body": "Как узнать человека по одежде?"
         }
     ]
-    return render_template("index.html",
+    return render_template("main.html",
                            user=user,
                            posts=posts)
 
@@ -37,4 +37,4 @@ def login() -> Union[str, Response]:
     if form.validate_on_submit():
         flash(f"Login requested for OpenId = {form.open_id.data}; Remember me = {str(form.remember_me.data)}")
         return redirect("/index")
-    return render_template("login.html", title="Sign In", form=form, providers=OPENID_PROVIDERS)
+    return render_template("entity/login.html", title="Sign In", form=form, providers=OPENID_PROVIDERS)

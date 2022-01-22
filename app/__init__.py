@@ -4,9 +4,9 @@ from .database import db
 from .entity import models
 
 
-def create_app() -> Flask:
+def create_app(selected_config: str) -> Flask:
     app = Flask(__name__)
-    app.config.from_object("config.DevelopmentConfig")
+    app.config.from_object(selected_config)
 
     db.init_app(app)
     with app.test_request_context():
