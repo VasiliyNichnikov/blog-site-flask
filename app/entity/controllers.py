@@ -1,13 +1,19 @@
 from typing import Union
 
+from flask import Blueprint
 from flask import render_template, flash, redirect, Response
 
-from app.general.forms import LoginForm
-from run import app
+from app.entity.forms import LoginForm
+
+module = Blueprint("entity", __name__)
+
+OPENID_PROVIDERS = [
+    {"name": "Google", "url": "https://www.google.com/accounts/o8/id"}
+]
 
 
-@app.route('/')
-@app.route('/index')
+@module.route('/')
+@module.route('/index')
 def index() -> str:
     user = {"nickname": "Vasiliy"}
     posts = [
@@ -25,10 +31,10 @@ def index() -> str:
                            posts=posts)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@module.route("/login", methods=["GET", "POST"])
 def login() -> Union[str, Response]:
     form = LoginForm()
     if form.validate_on_submit():
         flash(f"Login requested for OpenId = {form.open_id.data}; Remember me = {str(form.remember_me.data)}")
         return redirect("/index")
-    return render_template("login.html", title="Sign In", form=form, providers=app.config["OPENID_PROVIDERS"])
+    return render_template("login.html", title="Sign In", form=form, providers=OPENID_PROVIDERS)
