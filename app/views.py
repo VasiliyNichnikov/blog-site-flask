@@ -2,8 +2,8 @@ from typing import Union
 
 from flask import render_template, flash, redirect, Response
 
-from app import app
-from app.forms import LoginForm
+from app.firstmodule.forms import LoginForm
+from run import app
 
 
 @app.route('/')

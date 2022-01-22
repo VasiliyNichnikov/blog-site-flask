@@ -1,7 +1,18 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config.from_object("config")
-db = SQLAlchemy(app)
-from app import views
+from .database import db
+from .firstmodule import models
+
+
+def create_app() -> Flask:
+    app = Flask(__name__)
+    app.config.from_object("config.DevelopmentConfig")
+
+    db.init_app(app)
+    with app.test_request_context():
+        db.create_all()
+
+    import app.firstmodule.controllers as firstmodule
+    app.register_blueprint(firstmodule.module)
+
+    return app
