@@ -31,7 +31,6 @@ def user(nickname) -> Union[str, Response]:
             "body": "Когда мы станем есть больше, а весить меньше?"
         }
     ]
-    print(f"user - {user}")
     return render_template("profileuser/user.html", user=user, posts=posts)
 
 

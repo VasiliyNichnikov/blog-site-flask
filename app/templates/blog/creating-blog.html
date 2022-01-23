@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Новый пост</h1>
+
+    <form action="" style="display: flex" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <table>
+            <tr>
+                <td>Введите заголовок поста:</td>
+                <td>{{ form.title(maxlength=120) }}</td>
+            </tr>
+            <tr>
+                <td>Распишите пост:</td>
+                <td>{{ form.description(cols=80, rows=25, style="resize: none") }}</td>
+            </tr>
+            <tr>
+                <td>Загрузите превью поста, разрешение должно быть равно (ДОПИСАТЬ):</td>
+                <td>{{ form.photo }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Создать статью"></td>
+            </tr>
+        </table>
+{#        {% for error in form.photo.errors %}#}
+{#            <span style="color: red">{{ error }}</span>#}
+{#        {% endfor %}#}
+    </form>
+{% endblock %}
+    {#    <ol id="list">#}
+    {#        <li>#}
+    {#            <textarea style="resize: none" id="textarea" placeholder="Введите текста..." cols="100"></textarea>#}
+    {#        </li>#}
+    {#        <li>#}
+    {#            <button type="submit" id="add_block">Добавить текст</button>#}
+    {#            <button type="submit" id="add_image">Добавить изображение</button>#}
+    {#        </li>#}
+    {#    </ol>#}
+    {##}
+    {#    <script>#}
+    {#        $('#textarea').on('input', function () {#}
+    {#            this.style.height = '1px';#}
+    {#            this.style.height = (this.scrollHeight + 6) + 'px';#}
+    {#        });#}
+    {#    </script>#}
+
+    {#    <script>#}
+    {#        document.querySelector("#add_block").onclick = function () {#}
+    {#            $('<li><textarea style="resize: none" id="textarea" placeholder="Введите текста..." cols="100"></textarea></li>').insertBefore(this).find('.list').focus();#}
+    {#        }#}
+    {#    </script>#}

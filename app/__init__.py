@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 
 # Создание приложение
 app = Flask(__name__)
@@ -8,6 +9,7 @@ app.config.from_object("config.DevelopmentConfig")
 
 # Инициализация БД
 db = SQLAlchemy(app)
+
 # Подключение таблиц
 from .blog import models
 from .profileuser import models
@@ -22,12 +24,19 @@ lm.login_view = "entity.login"
 
 from . import views
 
+# Настроен UploadSet
+photos = UploadSet("photos", IMAGES)
+configure_uploads(app, photos)
+# patch_request_class(app)
+
 # Подключение blueprints
 import app.entity.controllers as entity
 import app.profileuser.controllers as profileuser
+import app.blog.controllers as blog
 
 app.register_blueprint(entity.module)
 app.register_blueprint(profileuser.module)
+app.register_blueprint(blog.module)
 
 # Логи
 if not app.debug:
