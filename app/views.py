@@ -3,10 +3,9 @@ import datetime
 from flask import g
 from flask_login import current_user
 
-from app import db
+from app import db, lm
 from app.profileuser.models import User
-from manager import app
-from manager import lm
+from setup import app
 
 
 @lm.user_loader

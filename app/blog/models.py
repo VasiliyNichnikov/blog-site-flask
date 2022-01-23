@@ -1,6 +1,6 @@
 import datetime
 
-from app.database import db
+from app import db
 
 
 class Blog(db.Model):

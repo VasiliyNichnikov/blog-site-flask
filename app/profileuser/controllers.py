@@ -3,7 +3,7 @@ from typing import Union
 from flask import Blueprint, Response, flash, redirect, url_for, render_template, g
 from flask_login import login_required
 
-from app.database import db
+from app import db
 from app.profileuser.forms import EditForm
 from app.profileuser.models import User
 

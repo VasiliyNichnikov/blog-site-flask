@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 
-from app.database import db
+from app import db
 
 ROLE_USER = 0
 ROLE_ADMIN = 1

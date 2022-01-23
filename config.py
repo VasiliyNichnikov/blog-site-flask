@@ -18,3 +18,9 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+
+
+class TestingConfig(Config):
+    TESTING = True
+    CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(base_dir, "test.db")

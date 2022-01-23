@@ -6,16 +6,10 @@ from flask_login import login_required, login_user, logout_user
 
 from app import db
 from app.profileuser.models import User, ROLE_USER
-# from manager import lm
 from .logintoyandex import LoginToYandex
 from .userdata import UserData
 
 module = Blueprint("entity", __name__)
-
-
-# @lm.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
 
 
 @module.route("/get_yandex_token")
@@ -61,11 +55,6 @@ def index() -> str:
     return render_template("main.html",
                            user=user,
                            posts=posts)
-
-
-# @module.before_request
-# def before_request() -> None:
-#     g.user = current_user
 
 
 @module.route("/login")
