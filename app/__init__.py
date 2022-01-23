@@ -5,8 +5,9 @@ from flask_login import LoginManager
 from flask_openid import OpenID
 
 from config import base_dir
+from .blog import models
 from .database import db
-from .entity import models
+from .profileuser import models
 
 
 def create_app(selected_config: str) -> Flask:
@@ -31,4 +32,19 @@ def create_login_open_id(app: Flask) -> (LoginManager, OpenID):
 
 def connecting_blueprints(app: Flask) -> None:
     import app.entity.controllers as entity
+    import app.profileuser.controllers as profileuser
     app.register_blueprint(entity.module)
+    app.register_blueprint(profileuser.module)
+
+
+def logs(app: Flask) -> None:
+    if not app.debug:
+        import logging
+        from logging.handlers import RotatingFileHandler
+        file_handler = RotatingFileHandler("tmp/myblog.log", 'a', 1 * 1024 * 1024, 10)
+        file_handler.setFormatter(
+            logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"))
+        app.logger.setLevel(logging.INFO)
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+        app.logger.info("MyBlog startup")

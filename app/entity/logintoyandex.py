@@ -1,7 +1,9 @@
 from urllib.parse import urlencode
-from .userdata import UserData
+
 from flask import request
 from requests import post, get
+
+from .userdata import UserData
 
 
 class LoginToYandex:
@@ -17,7 +19,6 @@ class LoginToYandex:
                         user_data["first_name"],
                         user_data["last_name"],
                         user_data["default_email"],
-                        user_data["is_avatar_empty"],
                         user_data["default_avatar_id"])
 
     def get_access_url(self) -> str:

@@ -2,24 +2,24 @@ from typing import Union
 
 from flask import Blueprint, g, url_for, request
 from flask import render_template, redirect, Response
-from flask_login import current_user, login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user
 
 from app import db
-from app.entity.models import User, ROLE_USER
-from manager import lm
+from app.profileuser.models import User, ROLE_USER
+# from manager import lm
 from .logintoyandex import LoginToYandex
 from .userdata import UserData
 
 module = Blueprint("entity", __name__)
 
 
-@lm.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+# @lm.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
 
 
 @module.route("/get_yandex_token")
-def get_yandex_token() -> Union[Response, str]:
+def get_yandex_token() -> Union[str, Response]:
     if g.user.is_authenticated:
         return redirect(url_for("entity.index"))
 
@@ -29,7 +29,7 @@ def get_yandex_token() -> Union[Response, str]:
         user = User.query.filter(User.email == ud.email).first()
         if user is None:
             nickname = ud.first_name
-            user = User(nickname=nickname, email=ud.email, role=ROLE_USER)
+            user = User(nickname=nickname, email=ud.email, role=ROLE_USER, avatar_id=ud.avatar_id)
             db.session.add(user)
             db.session.commit()
         login_user(user, remember=True)
@@ -63,12 +63,12 @@ def index() -> str:
                            posts=posts)
 
 
-@module.before_request
-def before_request() -> None:
-    g.user = current_user
+# @module.before_request
+# def before_request() -> None:
+#     g.user = current_user
 
 
-@module.route("/login", methods=["GET", "POST"])
+@module.route("/login")
 def login() -> Union[str, Response]:
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for("index"))

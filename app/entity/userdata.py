@@ -1,11 +1,13 @@
+from typing import Union
+
+
 class UserData:
-    def __init__(self, login: str, first_name: str, last_name: str, email: str, is_avatar_empty: bool,
-                 avatar_id: str) -> None:
+    def __init__(self, login: str, first_name: str, last_name: str, email: str,
+                 avatar_id: Union[None, str] = None) -> None:
         self.__login = login
         self.__first_name = first_name
         self.__last_name = last_name
         self.__email = email
-        self.__is_avatar_empty = is_avatar_empty
         self.__avatar_id = avatar_id
 
     @property
@@ -25,9 +27,5 @@ class UserData:
         return self.__email
 
     @property
-    def is_avatar_empty(self) -> bool:
-        return self.__is_avatar_empty
-
-    @property
-    def avatar_id(self) -> str:
+    def avatar_id(self) -> Union[None, str]:
         return self.__avatar_id
