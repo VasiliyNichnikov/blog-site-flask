@@ -6,6 +6,7 @@ from flask_login import login_required
 from app import db
 from app.profileuser.forms import EditForm
 from app.profileuser.models import User
+from app.blog.models import Blog
 
 module = Blueprint("profileuser", __name__)
 
@@ -17,21 +18,8 @@ def user(nickname) -> Union[str, Response]:
     if user is None:
         flash(f"User {nickname} not found.")
         return redirect(url_for("entity.index"))
-    posts = [
-        {
-            "author": user,
-            "body": "Интересный пост из мира животных!"
-        },
-        {
-            "author": user,
-            "body": "Как узнать человека по одежде?"
-        },
-        {
-            "author": user,
-            "body": "Когда мы станем есть больше, а весить меньше?"
-        }
-    ]
-    return render_template("profileuser/user.html", user=user, posts=posts)
+    blogs = Blog.query.filter(Blog.user_id == user.id).all()
+    return render_template("profileuser/user.html", user=user, blogs=blogs)
 
 
 @module.route("/edit", methods=["GET", "POST"])
