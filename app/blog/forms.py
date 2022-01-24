@@ -8,4 +8,4 @@ from wtforms.validators import InputRequired, Length
 class BlogForm(FlaskForm):
     title = StringField("title", validators=[InputRequired()])
     photo = FileField(validators=[FileAllowed(photos, "Image only!"), FileRequired("File was empty!")])
-    description = TextAreaField("description", validators=[Length(min=0, max=10000)])
+    description = TextAreaField("description", validators=[InputRequired(), Length(min=0, max=10000)])

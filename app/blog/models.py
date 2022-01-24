@@ -7,6 +7,8 @@ class Blog(db.Model):
     __tablename__ = "blogs"
 
     id = db.Column(db.Integer(), primary_key=True)
+    # Превью стаьи (ссылка на изображение)
+    preview_image_file = db.Column(db.String(), index=True, nullable=False)
     # Название статьи
     title = db.Column(db.String(120), index=True, unique=True, nullable=False)
     # Описание статьи

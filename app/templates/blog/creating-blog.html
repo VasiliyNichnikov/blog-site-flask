@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Новый пост</h1>
 
-    <form action="" style="display: flex" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <table>
             <tr>
@@ -15,7 +15,7 @@
                 <td>{{ form.description(cols=80, rows=25, style="resize: none") }}</td>
             </tr>
             <tr>
-                <td>Загрузите превью поста, разрешение должно быть равно (ДОПИСАТЬ):</td>
+                <td>Загрузите превью поста, изображение должно быть следующего разрешния: (1590x400):</td>
                 <td>{{ form.photo }}</td>
             </tr>
             <tr>
