@@ -1,36 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ name_post }}</h1>
+    <div class="col">
+        <h1>{{ name_post }}</h1>
+    </div>
 
-    <p>Выбранное превью:</p>
-    {% if url_image %}
-        <img src="{{ url_image }}" id="img-preview" style="width: 1590px; height: 400px;">
-    {% else %}
-        <img id="img-preview" style="width: 1590px; height: 400px;">
-    {% endif %}
+    <div class="col">
+        <p>Выбранное превью:</p>
+        {% if url_image %}
+            <div class="col-md-4 px-0">
+                <img src="{{ url_image }}" id="img-preview" class="img-fluid">
+            </div>
+        {% else %}
+            <div class="col-md-4 px-0">
+                <img id="img-preview" class="img-fluid">
+            </div>
+        {% endif %}
+    </div>
+    <div class="col">
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label for="title" class="form-label">Заголовок поста:</label>
+                    {{ form.title(maxlength=120, class="form-control") }}
+                </div>
+                <div class="col-6">
+                    <label for="description" class="form-label">Основной текст поста:</label>
+                    {{ form.description(rows=25, style="resize: none", class="form-control") }}
+                </div>
+                <div class="col">
+                    <label for="preview" class="form-label">Загрузите превью поста, изображение должно быть следующего
+                        разрешния: (1590x400):</label>
+                    {{ form.photo(id="img", class="form-control") }}
+                </div>
+                <hr class="my-4">
+                <input class="btn btn-success" type="submit" value="{{ name_submit_button }}">
+            </div>
+        </form>
+    </div>
 
-    <form action="" method="post" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <table>
-            <tr>
-                <td>Введите заголовок поста:</td>
-                <td>{{ form.title(maxlength=120) }}</td>
-            </tr>
-            <tr>
-                <td>Распишите пост:</td>
-                <td>{{ form.description(cols=80, rows=25, style="resize: none") }}</td>
-            </tr>
-            <tr>
-                <td>Загрузите превью поста, изображение должно быть следующего разрешния: (1590x400):</td>
-                <td>{{ form.photo(id="img") }}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="{{ name_submit_button }}"></td>
-            </tr>
-        </table>
-    </form>
     <script>
         $('#img').change(function () {
             var input = $(this)[0];

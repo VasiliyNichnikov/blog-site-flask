@@ -37,7 +37,14 @@ class BlogParent(ABC):
 
     def _save_image_on_server(self, image: Image) -> None:
         filename = secure_filename(self._file.filename)
+        print(filename)
         image.save(f"{PATH_PHOTOS}/{filename}")
+
+    @staticmethod
+    def get_blog(nickname: str, title: str) -> Blog:
+        user = User.query.filter(User.nickname == nickname).first()
+        blog = Blog.query.filter(func.lower(Blog.title) == title and Blog.user_id == user.id).first()
+        return blog
 
     def _get_image(self) -> Image:
         return Image.open(BytesIO(self._file.stream.read()))
@@ -97,7 +104,7 @@ class EditorBlog(BlogParent):
         if self._file is not None:
             if self.__image is None:
                 self.__image = self._get_image()
-            self.__remove_old_image(blog.preview_url_image)
+            # self.__remove_old_image(blog.preview_url_image)
             preview_url = self._get_preview_url()
             blog.preview_url_image = preview_url
             self._save_image_on_server(self.__image)
@@ -105,33 +112,18 @@ class EditorBlog(BlogParent):
         db.session.commit()
 
     @staticmethod
-    def get_blog(nickname: str, title: str) -> Blog:
-        user = User.query.filter(User.nickname == nickname).first()
-        blog = Blog.query.filter(func.lower(Blog.title) == title and Blog.user_id == user.id).first()
-        return blog
-
-    @staticmethod
     def __remove_old_image(filename):
         path_image = f"{PATH_PHOTOS}/{filename}"
         if os.path.isfile(path_image):
             os.remove(path_image)
 
-# class CreatorEditorBlog:
-#     __path_photos = "app/static/uploads"
-#
-#     def __init__(self, title: str, description: str, file: Union[FileStorage, None]) -> None:
-#         self.__title = title
-#         self.__description = description
-#         self.__file = file
-#         self.__image = None
-#         self.__filename = None
-#
-#
-#
-#     def edit_blog_to_bd(self, nickname: str, title: str) -> None:
-#         blog = self.get_blog(nickname, title)
-#         blog.title = self.__title
-#         blog.description = self.__description
-#         if self.__file is not None:
-#             preview_url: str = url_for("static", filename=f"uploads/{self.__filename}")
-#             blog.preview_url_image = preview_url
+
+class DestroyerBlog(BlogParent):
+    def remove(self, nickname: str, title: str) -> None:
+        blog = self.get_blog(nickname, title)
+        if blog is not None:
+            db.session.delete(blog)
+            db.session.commit()
+
+    def checking_correctness_of_parameters(self) -> bool:
+        pass

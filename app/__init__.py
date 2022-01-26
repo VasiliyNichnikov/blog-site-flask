@@ -3,9 +3,14 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 
+from app.momentjs import MomentJS
+
 # Создание приложение
 app = Flask(__name__)
 app.config.from_object("config.DevelopmentConfig")
+
+# Добавление модуля MomentJS к jinja
+app.jinja_env.globals["momentjs"] = MomentJS
 
 # Инициализация БД
 db = SQLAlchemy(app)

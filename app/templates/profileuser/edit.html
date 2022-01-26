@@ -4,19 +4,17 @@
     <h1>Редактирование профиля</h1>
     <form action="" method="post" name="edit">
         {{ form.hidden_tag() }}
-        <table>
-            <tr>
-                <td>Ваше имя:</td>
-                <td>{{ form.nickname(size=24) }}</td>
-            </tr>
-            <tr>
-                <td>Обо мне:</td>
-                <td>{{ form.about_me(cols=32, rows=4) }}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Сохранить изменения"></td>
-            </tr>
-        </table>
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <label for="firstname" class="form-label">Имя:</label>
+                {{ form.nickname(size=24, class="form-control") }}
+            </div>
+            <div class="col-6">
+                <label for="aboutme" class="form-label">Обо мне:</label>
+                {{ form.about_me(class="form-control") }}
+            </div>
+        </div>
+        <hr class="my-4">
+        <input class="btn btn-success" type="submit" value="Сохранить изменения">
     </form>
 {% endblock %}

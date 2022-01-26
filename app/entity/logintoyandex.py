@@ -22,11 +22,6 @@ class LoginToYandex:
                         user_data["default_email"],
                         user_data["default_avatar_id"])
 
-    def get_user_data_test(self, access_token) -> UserData:
-        # access_token = self.__get_access_token(self.__base_url_test)
-        user_data = get(self.__token_url.format(access_token)).json()
-        print(user_data)
-
     def get_access_url(self) -> str:
         return self.__base_url + f"authorize?response_type=code&client_id={self.__client_id}"
 

@@ -1,9 +1,49 @@
-<table>
-    <tr valign="top">
-        <td><br>Название: {{ blog.title }}; Дата создания: {{ blog.created_on }}</td>
-        <td><img src="{{ blog.preview_url_image }}"></td>
-        <td><a href="{{ url_for('blog.edit_blog', nickname=user.nickname, title=blog.title) }}">Редактировать</a></td>
-        <td><a href="{{ url_for('blog.hide_blog', nickname=user.nickname, title=blog.title) }}">Скрыть</a></td>
-        <td><a href="{{ url_for('blog.remove_blog', nickname=user.nickname, title=blog.title) }}">Удалить</a></td>
-    </tr>
-</table>
+<div class="card">
+    <img class="bd-placeholder-img card-img-top" src="{{ blog.preview_url_image }}">
+    <div class="card-body">
+        <h5 class="card-title">{{ blog.title }}</h5>
+        <p> Пост создан: {{ momentjs(blog.created_on).fromNow() }}</p>
+        <div class="row g-3">
+            <div class="col-2">
+                <a class="btn btn-info"
+                   href="{{ url_for('blog.edit_blog', nickname=user.nickname, title=blog.title) }}">Редактировать</a>
+            </div>
+            <div class="col-12">
+                <a class="btn btn-secondary"
+                   href="{{ url_for('blog.hide_blog', nickname=user.nickname, title=blog.title) }}">
+                    {% if blog.is_hide %}
+                        Показывать статью всем пользователям
+                    {% else %}
+                        Скрыть статью от остальных пользователей сервиса
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-4">
+                <a class="btn btn btn-dark"
+                   href="{{ url_for('blog.viewing_blog', nickname=user.nickname, title=blog.title) }}">Посмотреть</a>
+            </div>
+            <div class="col-12">
+                <a class="btn btn-danger"
+                   href="{{ url_for('blog.remove_blog', nickname=user.nickname, title=blog.title) }}">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{#<table>#}
+{#    <tr valign="top">#}
+{#        <td><br>Название: {{ blog.title }}; Пост создан: {{ momentjs(blog.created_on).fromNow() }}#}
+{#        </td>#}
+{#        <td><img src="{{ blog.preview_url_image }}"></td>#}
+{#        <td><a href="{{ url_for('blog.edit_blog', nickname=user.nickname, title=blog.title) }}">Редактировать</a></td>#}
+{#        <td><a href="{{ url_for('blog.hide_blog', nickname=user.nickname, title=blog.title) }}">#}
+{#            {% if blog.is_hide %}#}
+{#                Показывать статью всем пользователям#}
+{#            {% else %}#}
+{#                Скрыть статью от остальных пользователей сервиса#}
+{#            {% endif %}#}
+{#        </a></td>#}
+{#        <td><a href="{{ url_for('blog.remove_blog', nickname=user.nickname, title=blog.title) }}">Удалить</a></td>#}
+{#    </tr>#}
+{#</table>#}

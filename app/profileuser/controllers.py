@@ -16,7 +16,7 @@ module = Blueprint("profileuser", __name__)
 def user(nickname) -> Union[str, Response]:
     user = User.query.filter(User.nickname == nickname).first()
     if user is None:
-        flash(f"User {nickname} not found.")
+        flash(f"Пользователь {nickname} не найден")
         return redirect(url_for("entity.index"))
     blogs = Blog.query.filter(Blog.user_id == user.id).all()
     return render_template("profileuser/user.html", user=user, blogs=blogs)
@@ -31,7 +31,7 @@ def edit() -> Union[str, Response]:
         g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
-        flash("Your changes have been saved.")
+        flash("Изменения были сохранены")
         return redirect(url_for("profileuser.edit"))
     else:
         form.nickname.data = g.user.nickname

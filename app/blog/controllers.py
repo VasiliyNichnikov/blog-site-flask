@@ -2,8 +2,8 @@ from typing import Union
 
 from flask import Blueprint, Response, redirect, url_for, render_template, flash, request
 from flask_login import login_required
-
-from app.blog.controllerblog import CreatorBlog, EditorBlog
+from app import db
+from app.blog.controllerblog import CreatorBlog, EditorBlog, DestroyerBlog
 from app.blog.forms import BlogForm
 from config import AVAILABLE_RESOLUTION_PREVIEW_BLOG
 
@@ -24,7 +24,7 @@ def create_blog(nickname) -> Union[str, Response]:
             flash("Статья успешно создана")
             creator_blog.add_blog_to_db(nickname)
             return redirect(url_for("profileuser.user", nickname=nickname))
-        elif creator_blog.check_existence_similar_block() is False:
+        elif creator_blog.check_existence_similar_block() is True:
             flash("Пост с таким именем уже есть, подумайте над новым названием")
         else:
             resolution = creator_blog.resolution_image
@@ -60,7 +60,8 @@ def edit_blog(nickname: str, title: str) -> Union[str, Response]:
             form.description.data = blog.description
             url_image = blog.preview_url_image
         else:
-            pass  # TODO Ошибка должна быть
+            flash("Упс, данный блог куда-то пропал!")
+            return redirect(url_for("profileuser.user", nickname=nickname))
     return render_template("blog/creating-blog.html", form=form, name_post="Редактирование блога",
                            name_submit_button="Сохранить изменения", url_image=url_image)
 
@@ -68,10 +69,30 @@ def edit_blog(nickname: str, title: str) -> Union[str, Response]:
 @module.route("/hide_blog/<nickname>/<title>")
 @login_required
 def hide_blog(nickname: str, title: str) -> Union[str, Response]:
-    return f"Скрыть блог: {nickname}, {title}"
+    blog = CreatorBlog.get_blog(nickname, title)
+    if blog is not None:
+        blog.is_hide = not blog.is_hide
+        db.session.add(blog)
+        db.session.commit()
+    else:
+        flash("Упс, данный блог куда-то пропал!")
+    return redirect(url_for("profileuser.user", nickname=nickname))
 
 
 @module.route("/remove_blog/<nickname>/<title>")
 @login_required
 def remove_blog(nickname: str, title: str) -> Union[str, Response]:
-    return f"Удалить блог: {nickname}, {title}"
+    blog = DestroyerBlog("", "", None)
+    blog.remove(nickname, title)
+    return redirect(url_for("profileuser.user", nickname=nickname))
+
+
+@module.route("/viewing_blog/<nickname>/<title>")
+@login_required
+def viewing_blog(nickname: str, title: str) -> Union[str, Response]:
+    blog = CreatorBlog.get_blog(nickname, title)
+    if blog is None:
+        flash("Упс, данный блог куда-то пропал!")
+        return redirect(url_for("profileuser.user", nickname=nickname))
+    return render_template("blog/viewing-blog.html", blog=blog)
+
