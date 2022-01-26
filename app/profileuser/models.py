@@ -46,6 +46,5 @@ class User(db.Model, UserMixin):
             version += 1
         return new_nickname
 
-    # Метод __repr__ говорит Python как выводить объекты этого класса. Мы будем использовать его для отладки
     def __repr__(self) -> str:
         return f"<User-{self.nickname}>"

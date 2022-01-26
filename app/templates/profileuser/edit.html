@@ -8,6 +8,9 @@
             <div class="col-sm-6">
                 <label for="firstname" class="form-label">Имя:</label>
                 {{ form.nickname(size=24, class="form-control") }}
+                {% for error in form.errors.nickname %}
+                    <br><span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="col-6">
                 <label for="aboutme" class="form-label">Обо мне:</label>

@@ -21,10 +21,12 @@ def get_yandex_token() -> Union[str, Response]:
     ly = LoginToYandex()
     if request.args.get('code', False):
         ud: UserData = ly.get_user_data()
-        nickname = User.make_unique_nickname(ud.first_name)
-        user = User(nickname=nickname, email=ud.email, role=ROLE_USER, avatar_id=ud.avatar_id)
-        db.session.add(user)
-        db.session.commit()
+        user = User.query.filter(ud.email == ud.email).first()
+        if user is None:
+            nickname = User.make_unique_nickname(ud.first_name)
+            user = User(nickname=nickname, email=ud.email, role=ROLE_USER, avatar_id=ud.avatar_id)
+            db.session.add(user)
+            db.session.commit()
         login_user(user, remember=True)
         return redirect(url_for("entity.index"))
     else:
@@ -39,7 +41,6 @@ def index() -> str:
     user = g.user.nickname
     bf = BlogFilter(user)
     blogs = bf.get_other_users_blogs()
-    print(f"blogs = {blogs}")
     return render_template("main.html", user=user, blogs=blogs)
 
 

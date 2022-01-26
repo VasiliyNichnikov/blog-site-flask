@@ -4,9 +4,9 @@ from flask import Blueprint, Response, flash, redirect, url_for, render_template
 from flask_login import login_required
 
 from app import db
+from app.blog.models import Blog
 from app.profileuser.forms import EditForm
 from app.profileuser.models import User
-from app.blog.models import Blog
 
 module = Blueprint("profileuser", __name__)
 
@@ -25,17 +25,13 @@ def user(nickname) -> Union[str, Response]:
 @module.route("/edit", methods=["GET", "POST"])
 @login_required
 def edit() -> Union[str, Response]:
-    form = EditForm()
+    form = EditForm(g.user.nickname)
     if form.validate_on_submit():
-        user = User.query.filter_by(nickname=form.nickname.data).first()
-        if user is not None:
-            flash(f"Пользователь с таким именим ({form.nickname.data}) уже существует.")
-        else:
-            g.user.nickname = form.nickname.data
-            g.user.about_me = form.about_me.data
-            db.session.add(g.user)
-            db.session.commit()
-            flash("Изменения были сохранены")
+        g.user.nickname = form.nickname.data
+        g.user.about_me = form.about_me.data
+        db.session.add(g.user)
+        db.session.commit()
+        flash("Изменения были сохранены")
         return redirect(url_for("profileuser.edit"))
     else:
         form.nickname.data = g.user.nickname
