@@ -5,6 +5,7 @@ from flask import render_template, redirect, Response
 from flask_login import login_required, login_user, logout_user
 
 from app import db
+from app.entity.interactionwithblogs import BlogFilter
 from app.profileuser.models import User, ROLE_USER
 from .logintoyandex import LoginToYandex
 from .userdata import UserData
@@ -20,12 +21,10 @@ def get_yandex_token() -> Union[str, Response]:
     ly = LoginToYandex()
     if request.args.get('code', False):
         ud: UserData = ly.get_user_data()
-        user = User.query.filter(User.email == ud.email).first()
-        if user is None:
-            nickname = ud.first_name
-            user = User(nickname=nickname, email=ud.email, role=ROLE_USER, avatar_id=ud.avatar_id)
-            db.session.add(user)
-            db.session.commit()
+        nickname = User.make_unique_nickname(ud.first_name)
+        user = User(nickname=nickname, email=ud.email, role=ROLE_USER, avatar_id=ud.avatar_id)
+        db.session.add(user)
+        db.session.commit()
         login_user(user, remember=True)
         return redirect(url_for("entity.index"))
     else:
@@ -38,23 +37,10 @@ def get_yandex_token() -> Union[str, Response]:
 @login_required
 def index() -> str:
     user = g.user.nickname
-    posts = [
-        {
-            "author": {"nickname": "Артем"},
-            "body": "Интересный пост из мира животных!"
-        },
-        {
-            "author": {"nickname": "Матвей"},
-            "body": "Как узнать человека по одежде?"
-        },
-        {
-            "author": {"nickname": "Богдан"},
-            "body": "Когда мы станем есть больше, а весить меньше?"
-        }
-    ]
-    return render_template("main.html",
-                           user=user,
-                           posts=posts)
+    bf = BlogFilter(user)
+    blogs = bf.get_other_users_blogs()
+    print(f"blogs = {blogs}")
+    return render_template("main.html", user=user, blogs=blogs)
 
 
 @module.route("/login")

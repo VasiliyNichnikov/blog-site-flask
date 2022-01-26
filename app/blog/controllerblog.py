@@ -41,9 +41,8 @@ class BlogParent(ABC):
         image.save(f"{PATH_PHOTOS}/{filename}")
 
     @staticmethod
-    def get_blog(nickname: str, title: str) -> Blog:
-        user = User.query.filter(User.nickname == nickname).first()
-        blog = Blog.query.filter(func.lower(Blog.title) == title and Blog.user_id == user.id).first()
+    def get_blog(title: str) -> Blog:
+        blog = Blog.query.filter(func.lower(Blog.title) == title).first()
         return blog
 
     def _get_image(self) -> Image:
@@ -79,7 +78,7 @@ class CreatorBlog(BlogParent):
 
     def __create_blog(self) -> Blog:
         preview_url = self._get_preview_url()
-        return Blog(title=self._title, description=self._description, preview_url_image=preview_url)
+        return Blog(title=self._title, description=self._description, preview_url_image=preview_url, is_hide=False)
 
 
 class EditorBlog(BlogParent):
@@ -97,14 +96,13 @@ class EditorBlog(BlogParent):
             resolution_correct = self.check_size_image(self.__image)
             return block_exists is False and resolution_correct
 
-    def edit_blog_to_bd(self, nickname: str, title: str) -> None:
-        blog = self.get_blog(nickname, title)
+    def edit_blog_to_bd(self, title: str) -> None:
+        blog = self.get_blog(title)
         blog.title = self._title
         blog.description = self._description
         if self._file is not None:
             if self.__image is None:
                 self.__image = self._get_image()
-            # self.__remove_old_image(blog.preview_url_image)
             preview_url = self._get_preview_url()
             blog.preview_url_image = preview_url
             self._save_image_on_server(self.__image)
@@ -119,8 +117,8 @@ class EditorBlog(BlogParent):
 
 
 class DestroyerBlog(BlogParent):
-    def remove(self, nickname: str, title: str) -> None:
-        blog = self.get_blog(nickname, title)
+    def remove(self, title: str) -> None:
+        blog = self.get_blog(title)
         if blog is not None:
             db.session.delete(blog)
             db.session.commit()

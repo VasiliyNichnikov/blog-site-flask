@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Привет, {{ user }}!</h1>
-    {% for post in posts %}
-        <div>{{ post.author.nickname }} рассказывает: <b>{{ post.body }}</b></div>
-    {% endfor %}
+    <h1>Привет, {{ g.user.nickname }}</h1>
+    <div class="row mb-2">
+        {% if blogs %}
+            {% for blog in blogs %}
+                <div class="col-md-6">
+                    {% include "blog/preview-blog.html" %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Здесь пока ничего нет :(. Но давайте напишем блог для других пользователей, для этого воспользуйтесь
+                кнопкой сверху "Написать блог"!.</p>
+        {% endif %}
+    </div>
 {% endblock %}

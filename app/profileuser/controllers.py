@@ -27,11 +27,15 @@ def user(nickname) -> Union[str, Response]:
 def edit() -> Union[str, Response]:
     form = EditForm()
     if form.validate_on_submit():
-        g.user.nickname = form.nickname.data
-        g.user.about_me = form.about_me.data
-        db.session.add(g.user)
-        db.session.commit()
-        flash("Изменения были сохранены")
+        user = User.query.filter_by(nickname=form.nickname.data).first()
+        if user is not None:
+            flash(f"Пользователь с таким именим ({form.nickname.data}) уже существует.")
+        else:
+            g.user.nickname = form.nickname.data
+            g.user.about_me = form.about_me.data
+            db.session.add(g.user)
+            db.session.commit()
+            flash("Изменения были сохранены")
         return redirect(url_for("profileuser.edit"))
     else:
         form.nickname.data = g.user.nickname

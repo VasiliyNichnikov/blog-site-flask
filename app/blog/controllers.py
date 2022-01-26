@@ -12,7 +12,7 @@ module = Blueprint("blog", __name__)
 
 @module.route("/create_blog/<nickname>", methods=["GET", "POST"])
 @login_required
-def create_blog(nickname) -> Union[str, Response]:
+def create_blog(nickname: str) -> Union[str, Response]:
     form = BlogForm()
     if form.validate_on_submit():
         file = request.files["photo"]
@@ -49,12 +49,12 @@ def edit_blog(nickname: str, title: str) -> Union[str, Response]:
         editor_blog: EditorBlog = EditorBlog(form.title.data, form.description.data, file)
         if editor_blog.checking_correctness_of_parameters():
             flash("Статья успешно изменена")
-            editor_blog.edit_blog_to_bd(nickname, title)
+            editor_blog.edit_blog_to_bd(title)
             return redirect(url_for("profileuser.user", nickname=nickname))
         else:
             flash("Проблема с выбранным изображением или такой пост уже существует.")
     else:
-        blog = EditorBlog.get_blog(nickname, title)
+        blog = EditorBlog.get_blog(title)
         if blog is not None:
             form.title.data = blog.title
             form.description.data = blog.description
@@ -69,7 +69,7 @@ def edit_blog(nickname: str, title: str) -> Union[str, Response]:
 @module.route("/hide_blog/<nickname>/<title>")
 @login_required
 def hide_blog(nickname: str, title: str) -> Union[str, Response]:
-    blog = CreatorBlog.get_blog(nickname, title)
+    blog = CreatorBlog.get_blog(title)
     if blog is not None:
         blog.is_hide = not blog.is_hide
         db.session.add(blog)
@@ -83,16 +83,16 @@ def hide_blog(nickname: str, title: str) -> Union[str, Response]:
 @login_required
 def remove_blog(nickname: str, title: str) -> Union[str, Response]:
     blog = DestroyerBlog("", "", None)
-    blog.remove(nickname, title)
+    blog.remove(title)
     return redirect(url_for("profileuser.user", nickname=nickname))
 
 
-@module.route("/viewing_blog/<nickname>/<title>")
+@module.route("/viewing_blog//<title>")
 @login_required
-def viewing_blog(nickname: str, title: str) -> Union[str, Response]:
-    blog = CreatorBlog.get_blog(nickname, title)
+def viewing_blog(title: str) -> Union[str, Response]:
+    blog = CreatorBlog.get_blog(title)
     if blog is None:
         flash("Упс, данный блог куда-то пропал!")
-        return redirect(url_for("profileuser.user", nickname=nickname))
+        return redirect(url_for("entity.index"))
     return render_template("blog/viewing-blog.html", blog=blog)
 

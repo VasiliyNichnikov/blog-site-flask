@@ -20,6 +20,7 @@ class LoginToYandex:
                         user_data["first_name"],
                         user_data["last_name"],
                         user_data["default_email"],
+                        user_data["is_avatar_empty"],
                         user_data["default_avatar_id"])
 
     def get_access_url(self) -> str:
