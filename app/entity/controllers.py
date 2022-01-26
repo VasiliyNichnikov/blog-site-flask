@@ -21,7 +21,7 @@ def get_yandex_token() -> Union[str, Response]:
     ly = LoginToYandex()
     if request.args.get('code', False):
         ud: UserData = ly.get_user_data()
-        user = User.query.filter(ud.email == ud.email).first()
+        user = User.query.filter(User.email == ud.email).first()
         if user is None:
             nickname = User.make_unique_nickname(ud.first_name)
             user = User(nickname=nickname, email=ud.email, role=ROLE_USER, avatar_id=ud.avatar_id)
