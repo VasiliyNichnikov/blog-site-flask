@@ -7,7 +7,7 @@
     {% else %}
         <title>MyBlog</title>
     {% endif %}
-
+    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 <body>
@@ -15,7 +15,7 @@
     <a href="{{ url_for('entity.index') }}">Домой</a>
     {% if g.user.is_authenticated %}
         | <a href="{{ url_for('profileuser.user', nickname = g.user.nickname) }}">Профиль</a>
-        | <a href="{{ url_for('blog.create_blog') }}">Написать статью</a>
+        | <a href="{{ url_for('blog.create_blog', nickname = g.user.nickname) }}">Написать блог</a>
         | <a href="{{ url_for('entity.logout') }}">Выйти</a>
     {% endif %}
 </div>

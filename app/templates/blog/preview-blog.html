@@ -1,0 +1,9 @@
+<table>
+    <tr valign="top">
+        <td><br>Название: {{ blog.title }}; Дата создания: {{ blog.created_on }}</td>
+        <td><img src="{{ blog.preview_url_image }}"></td>
+        <td><a href="{{ url_for('blog.edit_blog', nickname=user.nickname, title=blog.title) }}">Редактировать</a></td>
+        <td><a href="{{ url_for('blog.hide_blog', nickname=user.nickname, title=blog.title) }}">Скрыть</a></td>
+        <td><a href="{{ url_for('blog.remove_blog', nickname=user.nickname, title=blog.title) }}">Удалить</a></td>
+    </tr>
+</table>

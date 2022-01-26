@@ -15,15 +15,20 @@
                     </p>
                 {% endif %}
                 {% if user.id == g.user.id %}
-                <p>
-                    <a href="{{ url_for('profileuser.edit') }}">Редактировать</a>
-                </p>
+                    <p>
+                        <a href="{{ url_for('profileuser.edit') }}">Редактировать</a>
+                    </p>
                 {% endif %}
             </td>
         </tr>
     </table>
     <hr>
-    {% for post in posts %}
-        {% include "comment-base.html" %}
-    {% endfor %}
+    <h2>Мои блоги</h2>
+    {% if blogs %}
+        {% for blog in blogs %}
+            {% include "blog/preview-blog.html" %}
+        {% endfor %}
+    {% else %}
+        <p>Здесь пока ничего нет :(. Для написания блога, возпользуйтесь кнопкой сверху "Написать блог".</p>
+    {% endif %}
 {% endblock %}
